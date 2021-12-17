@@ -13,26 +13,26 @@
     foo.set_number(12.2);
 */
 
-#define PROPERTY(type,name) \
+#define PROPERTY(type, name) \
 private:\
     type _##name;\
 public:\
-    type #name() const {\
+    type name() const {\
         return _##name;\
     }\
     void set_##name(const type& val) {\
         _##name = val;\
     }
 
-#define PROPERTY_READ_ONLY(type,name) \
+#define PROPERTY_READ_ONLY(type, name) \
 private:\
     type _##name;\
 public:\
-    type #name() const {\
+    type name() const {\
         return _##name;\
     }
 
-#define PROPERTY_WRITE_ONLY(type,name) \
+#define PROPERTY_WRITE_ONLY(type, name) \
 private:\
     type _##name;\
 public:\
