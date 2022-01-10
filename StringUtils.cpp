@@ -12,7 +12,7 @@
 #define UINT64_MAX_LENGTH 20
 using namespace std;
 
-bool stringUtils::caseInsEquals (const string& first, const string& second) {
+bool StringUtils::caseInsEquals (const std::string& first, const std::string& second) {
     if (first.length() != second.length()) {
         return false;
     }
@@ -20,7 +20,7 @@ bool stringUtils::caseInsEquals (const string& first, const string& second) {
             return tolower(a) == tolower(b);
     });
 }
- bool stringUtils::containsSpace(const string& str) {
+ bool StringUtils::containsSpace(const std::string& str) {
 
     for (auto ch : str) {
         if(0 != isspace(ch)) {
@@ -30,7 +30,7 @@ bool stringUtils::caseInsEquals (const string& first, const string& second) {
     return false;
 }
 
-void stringUtils::removeEndingPaddings(string& in) {
+void StringUtils::removeEndingPaddings(std::string& in) {
 
     in.erase(std::remove_if(in.begin(), in.end(), [](int ch) {
         return ('\0' == ch);
@@ -38,7 +38,7 @@ void stringUtils::removeEndingPaddings(string& in) {
 }
 
 
-bool stringUtils::toUint32(const string& str, uint32_t &out) {
+bool StringUtils::toUint32(const std::string& str, uint32_t &out) {
 
     uint32_t value = 0;
 
@@ -47,7 +47,7 @@ bool stringUtils::toUint32(const string& str, uint32_t &out) {
         return false;
     }
     
-    string trimmed = str;
+    std::string trimmed = str;
     trimmed.erase(std::remove_if(trimmed.begin(), trimmed.end(), [](int ch) {
         return std::isspace(ch);
     }), trimmed.end());
@@ -69,7 +69,7 @@ bool stringUtils::toUint32(const string& str, uint32_t &out) {
 }
 
 
-bool stringUtils::toUint64(const string& str, uint64_t &out) {
+bool StringUtils::toUint64(const std::string& str, uint64_t &out) {
 
     uint64_t value = 0;
 
@@ -78,7 +78,7 @@ bool stringUtils::toUint64(const string& str, uint64_t &out) {
         return false;
     }
     
-    string trimmed = str;
+    std::string trimmed = str;
     trimmed.erase(std::remove_if(trimmed.begin(), trimmed.end(), [](int ch) {
         return std::isspace(ch);
     }), trimmed.end());
@@ -100,16 +100,16 @@ bool stringUtils::toUint64(const string& str, uint64_t &out) {
 }
 
 
-string stringUtils::uint64ToHex(const uint64_t val) {
+std::string StringUtils::uint64ToHex(const uint64_t val) {
 
     uint32_t length = snprintf(NULL, 0, "0x%" PRIx64 "", val);
     char* buf = new char[length + 1];
     snprintf(buf, length + 1, "0x%" PRIx64 "", val);
-    string str(buf);
+    std::string str(buf);
     delete[] buf;
     return str;
 }
-bool stringUtils::hexToUint64(const string& str, uint64_t &out) {
+bool StringUtils::hexToUint64(const std::string& str, uint64_t &out) {
 
     uint64_t value = 0;
     bool scanned = false;
@@ -140,27 +140,27 @@ bool stringUtils::hexToUint64(const string& str, uint64_t &out) {
     return true;
 }
 
-string stringUtils::fromUint32(const uint32_t val) {
+std::string StringUtils::fromUint32(const uint32_t val) {
 
     uint32_t length = snprintf(NULL, 0, "%u", val);
     char* buf = new char[length + 1];
     snprintf(buf, length + 1, "%u", val);
-    string str(buf);
+    std::string str(buf);
     delete[] buf;
     return str;
 }
 
-string stringUtils::fromUint64(const uint64_t val) {
+std::string StringUtils::fromUint64(const uint64_t val) {
 
     uint32_t length = snprintf(NULL, 0, "%llu", val);
     char* buf = new char[length + 1];
     snprintf(buf, length + 1, "%llu", val);
-    string str(buf);
+    std::string str(buf);
     delete[] buf;
     return str;
 }
 
-string stringUtils::format(const char *fmt, ...) {
+std::string StringUtils::format(const char* const fmt, ...) {
 
     va_list args;
     va_start(args, fmt);
@@ -175,7 +175,7 @@ string stringUtils::format(const char *fmt, ...) {
         {
             va_end(args);
             va_end(args2);
-            return string(v.data());
+            return std::string(v.data());
         }
         size_t size;
         if (res < 0) {
@@ -190,7 +190,7 @@ string stringUtils::format(const char *fmt, ...) {
     }
 }
 
-string stringUtils::format(const char *fmt, va_list args) {
+std::string StringUtils::format(const char* const fmt, va_list args) {
 
     std::vector<char> vect;
     vect.resize(1024);
@@ -199,7 +199,7 @@ string stringUtils::format(const char *fmt, va_list args) {
         int res = vsnprintf(vect.data(), vect.size(), fmt, args);
         if ((res >= 0) && (res < static_cast<int>(vect.size())))
         {
-            return string(vect.data());
+            return std::string(vect.data());
         }
         size_t size;
         if (res < 0)
@@ -211,12 +211,12 @@ string stringUtils::format(const char *fmt, va_list args) {
     }
 }
 
-string stringUtils::newLineStr(const char* const str) {
+std::string StringUtils::newLineStr(const char* const str) {
 
     return format("%s\r\n",str);
 }
 
-size_t stringUtils::countSymbols(const string& str, const char sym) {
+size_t StringUtils::countSymbols(const std::string& str, const char sym) {
 
     size_t ret = 0;
     for(char it : str){
@@ -227,7 +227,7 @@ size_t stringUtils::countSymbols(const string& str, const char sym) {
     return ret;
 }
 
-size_t stringUtils::replace(std::string& src, const std::string& from, const std::string& to) {
+size_t StringUtils::replace(std::string& src, const std::string& from, const std::string& to) {
 
     size_t ret {0};
 

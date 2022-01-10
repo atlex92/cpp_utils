@@ -1,4 +1,4 @@
-file(GLOB_RECURSE SOURCES  src/*.cpp src/*.c)
+file(GLOB_RECURSE SOURCES  *.cpp *.c)
 set(srcs ${SOURCES})
 
 set(includedirs
