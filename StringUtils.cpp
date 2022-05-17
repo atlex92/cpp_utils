@@ -1,12 +1,10 @@
-#include "StringUtils.hpp"
-#include <algorithm>
-#include <string>
-#include <iostream>
-#include "stdio.h"
-#include <assert.h>
 #include <vector>
-#include "inttypes.h"
 #include <algorithm>
+#include "StringUtils.hpp"
+#include "stdio.h"
+#include "inttypes.h"
+#include <memory>
+#include <cstring>
 
 #define UINT32_MAX_LENGHT 10
 #define UINT64_MAX_LENGTH 20
@@ -71,27 +69,38 @@ bool StringUtils::toUint32(const std::string& str, uint32_t &out) {
 
 bool StringUtils::toUint64(const std::string& str, uint64_t &out) {
 
-    uint64_t value = 0;
+    std::string trimmed {str};
 
-    // More than once
-    if (1 != sscanf(str.c_str(), "%llu", &value)){
-        return false;
-    }
-    
-    std::string trimmed = str;
-    trimmed.erase(std::remove_if(trimmed.begin(), trimmed.end(), [](int ch) {
+    trimmed.erase(std::remove_if(trimmed.begin(), trimmed.end(), [](char ch) {
         return std::isspace(ch);
     }), trimmed.end());
+
+    StringUtils::removeEndingPaddings(trimmed);
 
     if (trimmed.length() > UINT64_MAX_LENGTH){
         return false;
     }
 
-    char testBuff[UINT64_MAX_LENGTH+1];
-    sprintf(testBuff, "%llu", value);
+    uint64_t value = 0;
+    // More than once
+    if (1 != sscanf(trimmed.c_str(), "%llu", &value)){
+        return false;
+    }
+
+    size_t symbolCounter{1};
+    size_t divider{10};
+
+    while(value / divider) {
+        divider *= 10;
+        symbolCounter++;
+    }
+
+    std::unique_ptr<char> testBuff{new char[symbolCounter + 1]{}};
+
+    sprintf(testBuff.get(), "%llu", value);
 
     // garbage check
-    if(trimmed.compare(testBuff) != 0){
+    if(trimmed.compare(testBuff.get()) != 0){
         return false;
     }
 
@@ -102,13 +111,14 @@ bool StringUtils::toUint64(const std::string& str, uint64_t &out) {
 
 std::string StringUtils::uint64ToHex(const uint64_t val) {
 
-    uint32_t length = snprintf(NULL, 0, "0x%" PRIx64 "", val);
+    uint32_t length = snprintf(NULL, 0, "0x%" PRIx64, val);
     char* buf = new char[length + 1];
-    snprintf(buf, length + 1, "0x%" PRIx64 "", val);
+    snprintf(buf, length + 1, "0x%" PRIx64, val);
     std::string str(buf);
     delete[] buf;
     return str;
 }
+
 bool StringUtils::hexToUint64(const std::string& str, uint64_t &out) {
 
     uint64_t value = 0;
@@ -121,13 +131,13 @@ bool StringUtils::hexToUint64(const std::string& str, uint64_t &out) {
 
     if (false == scanned) {
         // 0X prefix
-        if (1 == sscanf(str.c_str(), "0X%" PRIx64 "", &value)){
+        if (1 == sscanf(str.c_str(), "0X%" PRIx64, &value)){
             scanned = true;
         }
     }
     if (false == scanned) {
         // without prefix
-        if (1 == sscanf(str.c_str(), "%" PRIx64 "", &value)){
+        if (1 == sscanf(str.c_str(), "%" PRIx64, &value)){
             scanned = true;
         }
     }
@@ -153,10 +163,9 @@ std::string StringUtils::fromUint32(const uint32_t val) {
 std::string StringUtils::fromUint64(const uint64_t val) {
 
     uint32_t length = snprintf(NULL, 0, "%llu", val);
-    char* buf = new char[length + 1];
-    snprintf(buf, length + 1, "%llu", val);
-    std::string str(buf);
-    delete[] buf;
+    std::unique_ptr<char> buf {new char[length + 1]{}};
+    snprintf(buf.get(), length + 1, "%llu", val);
+    std::string str(buf.get());
     return str;
 }
 
@@ -246,5 +255,17 @@ size_t StringUtils::replace(std::string& src, const std::string& from, const std
         /* Advance index forward so the next iteration doesn't pick it up as well. */
         index += to.length();
     }
+    return ret;
+}
+
+std::string StringUtils::binaryToHex(const uint8_t* bytes, const size_t len) {
+
+    std::unique_ptr<char> buf {new char[len * 3 + 1]{}};
+    for (size_t i = 0; i < len; i++) {
+        snprintf(buf.get() + i*2, 3, "%02" PRIx8, bytes[i]);
+    }
+    
+    std::string ret(buf.get());
+
     return ret;
 }

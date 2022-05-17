@@ -18,6 +18,7 @@ class StringUtils {
         static std::string fromUint32(const uint32_t val);
         static std::string fromUint64(const uint64_t val);
         static std::string uint64ToHex(const uint64_t val);
+        static std::string binaryToHex(const uint8_t* bytes, const size_t len);
 
         static std::string format(const char* const fmt, ...);
         static std::string format(const char* const fmt, va_list args);
