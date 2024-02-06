@@ -41,7 +41,7 @@ bool StringUtils::toUint32(const std::string& str, uint32_t &out) {
     uint32_t value = 0;
 
     // More than once
-    if (1 != sscanf(str.c_str(), "%u", &value)){
+    if (1 != sscanf(str.c_str(), "%lu", &value)){
         return false;
     }
     
@@ -55,7 +55,7 @@ bool StringUtils::toUint32(const std::string& str, uint32_t &out) {
     }
 
     char testBuff[UINT32_MAX_LENGHT+1];
-    sprintf(testBuff, "%u", value);
+    sprintf(testBuff, "%lu", value);
 
     // garbage check
     if(trimmed.compare(testBuff) != 0){
@@ -152,9 +152,9 @@ bool StringUtils::hexToUint64(const std::string& str, uint64_t &out) {
 
 std::string StringUtils::fromUint32(const uint32_t val) {
 
-    uint32_t length = snprintf(NULL, 0, "%u", val);
+    uint32_t length = snprintf(NULL, 0, "%lu", val);
     char* buf = new char[length + 1];
-    snprintf(buf, length + 1, "%u", val);
+    snprintf(buf, length + 1, "%lu", val);
     std::string str(buf);
     delete[] buf;
     return str;
