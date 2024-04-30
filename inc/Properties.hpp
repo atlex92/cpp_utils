@@ -15,27 +15,27 @@
 
 #define PROPERTY(type, name) \
 private:\
-    type _##name;\
+    type name##_;\
 public:\
     type name() const {\
-        return _##name;\
+        return name##_;\
     }\
     void set_##name(const type& val) {\
-        _##name = val;\
+        name##_ = val;\
     }
 
 #define PROPERTY_READ_ONLY(type, name) \
 private:\
-    type _##name;\
+    type name##_;\
 public:\
     type name() const {\
-        return _##name;\
+        return name##_;\
     }
 
 #define PROPERTY_WRITE_ONLY(type, name) \
 private:\
-    type _##name;\
+    type name##_;\
 public:\
     void set_##name(const type& val) {\
-        _##name = val;\
+        name##_ = val;\
     }
