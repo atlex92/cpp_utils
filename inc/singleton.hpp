@@ -11,7 +11,8 @@
 */
 
 template <typename T>
-struct Singleton {
+class Singleton {
+public:
   Singleton(const Singleton&) = delete;
   Singleton(Singleton&&) = delete;
   Singleton& operator=(const Singleton&) = delete;
